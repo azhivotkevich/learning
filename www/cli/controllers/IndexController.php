@@ -4,11 +4,13 @@
 namespace cli\controllers;
 
 
-class IndexController
+use components\ControllerAbstract;
+
+class IndexController extends ControllerAbstract
 {
     public function __construct()
     {
-//        echo 'IndexController';
+        echo 'IndexController';
     }
 
     public function Index()

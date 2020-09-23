@@ -4,14 +4,16 @@
 namespace web\controllers;
 
 
-class IndexController
+use components\ControllerAbstract;
+
+class IndexController extends ControllerAbstract
 {
     public function __construct()
     {
 //        echo 'IndexController';
     }
 
-    public function Index()
+    public function actionIndex()
     {
         echo __METHOD__;
     }

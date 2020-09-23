@@ -3,7 +3,8 @@
 
 namespace components;
 
-use helpers\Request;
+use exceptions\NotFoundException;
+use helpers\Strings;
 
 /**
  * Class Router
@@ -11,46 +12,58 @@ use helpers\Request;
  */
 class Router
 {
-    /**
-     * @var string
-     */
-    private $url;
+    private Dispatcher $dispatcher;
+    private const CONTROLLER_SUFFIX = 'Controller';
+    private string $appControllersNamespace = '';
 
-    /**
-     * Router constructor.
-     * @param $url
-     * @param string $delimiter
-     */
-
-    public function __construct($url, $delimiter = '/')
+    public function __construct(Dispatcher $dispatcher)
     {
-        $this->url = Request::clearUrl($url);
-        return $this->dispatch($delimiter);
+        $this->dispatcher = $dispatcher;
+        $this->setAppControllersNamespace();
     }
 
-    /**
-     * @param $delimiter
-     * @return string
-     */
-
-    private function dispatch($delimiter)
+    public function run()
     {
-        $controllerNamespace = ($delimiter !== '::') ? 'web\controllers\\' : 'cli\controllers\\';
-        $parts = array_filter(explode($delimiter, $this->url));
-        $controllerName = $controllerNamespace . ucfirst(strtolower(array_shift($parts) ?? 'index')) . 'Controller';
+        $controller = $this->getControllerObject();
+        $action = $this->getActionMethod($controller);
 
-        if (false === class_exists($controllerName)) {
-            die("{$controllerName} doesn't exist");
+        return $controller->{$action}();
+    }
+
+    private function getControllerObject()
+    {
+        $controller = $this->dispatcher->getControllerPart();
+        $class = $this->appControllersNamespace . Strings::camelize($controller) . self::CONTROLLER_SUFFIX;
+        if (false === class_exists($class)) {
+//            throw new NotFoundException("Class {$class} is undefined");
+            die("Class {$class} is undefined");
         }
 
-        $controllerObject = new $controllerName;
+        $object = new $class();
 
-        $action = ucfirst(strtolower(array_shift($parts) ?? 'index'));
-
-        if (false === method_exists($controllerObject, $action)) {
-            die("There is no {$action} action");
+        if (!$object instanceof ControllerAbstract) {
+//            throw new NotFoundException("Object of {$class} has incorrect instance");
+            die("Object of {$class} has incorrect instance");
         }
 
-        return $controllerObject->{$action}();
+        return $object;
+    }
+
+    private function getActionMethod(ControllerAbstract $controller): string
+    {
+        $action = $this->dispatcher->getActionPart();
+        $method = 'action' . Strings::camelize($action);
+
+        if (false === method_exists($controller, $method)) {
+            die("Action {$action} is undefined");
+        }
+
+        return $method;
+    }
+
+    private function setAppControllersNamespace(): void
+    {
+        $appName = $this->dispatcher->getCurrentAppType();
+        $this->appControllersNamespace = "\\{$appName}\\controllers\\";
     }
 }
