@@ -63,7 +63,7 @@ class Router
 
     private function setAppControllersNamespace(): void
     {
-        $appName = $this->dispatcher->getCurrentAppType();
+        $appName = strtolower($this->dispatcher->getCurrentAppType());
         $this->appControllersNamespace = "\\{$appName}\\controllers\\";
     }
 }

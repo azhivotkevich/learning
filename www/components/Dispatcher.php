@@ -35,9 +35,9 @@ class Dispatcher
             return;
         }
         if (false === array_key_exists(php_sapi_name(), self::APP_TYPES)) {
-            $this->current_app_type = 'web';
+            $this->current_app_type = 'Web';
         }
-        $this->current_app_type = self::APP_TYPES[php_sapi_name()];
+        $this->current_app_type = ucwords(self::APP_TYPES[php_sapi_name()]);
     }
 
     private function parseParts(): void
