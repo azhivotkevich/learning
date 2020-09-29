@@ -1,12 +1,13 @@
 <?php
 error_reporting(E_ALL);
-use components\Autoloader;
-use components\Router;
 
-define('DS', DIRECTORY_SEPARATOR);
+use components\Autoloader;
 require_once __DIR__ . '/components/Autoloader.php';
 spl_autoload_register([new Autoloader(__DIR__), 'load']);
 
-$dispatcher = new components\Dispatcher();
-$router = new components\Router($dispatcher);
-$router->run();
+$config = require_once __DIR__ . '/config/main.php';
+
+$dispatcher = new \components\Dispatcher();
+$router = new \components\Router($dispatcher);
+
+var_dump($router);

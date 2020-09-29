@@ -3,7 +3,6 @@
 
 namespace components;
 
-use exceptions\NotFoundException;
 use helpers\Strings;
 
 /**
@@ -13,57 +12,48 @@ use helpers\Strings;
 class Router
 {
     private Dispatcher $dispatcher;
-    private const CONTROLLER_SUFFIX = 'Controller';
-    private string $appControllersNamespace = '';
+    private const CONTROLLER_NAMESPACE = '\\web\\controllers\\';
 
-    public function __construct(Dispatcher $dispatcher)
+    public function __construct($dispatcher)
     {
         $this->dispatcher = $dispatcher;
-        $this->setAppControllersNamespace();
+        $this->run();
     }
 
-    public function run()
+    private function run()
     {
-        $controller = $this->getControllerObject();
-        $action = $this->getActionMethod($controller);
+        $class = $this->prepareController();
 
-        return $controller->{$action}();
+        if (!class_exists($class)) {
+            throw new \Exception("Class {$class} can't be load");
+        }
+        
+        $class = new $class();
+
+        $method = $this->prepareAction();
+
+        if (!method_exists($class, $method)) {
+            throw new \Exception("Method {$method} doesn't exist");
+        }
+
+        return $class->{$method}();
     }
 
-    private function getControllerObject()
+    private function prepareController()
     {
         $controller = $this->dispatcher->getControllerPart();
-        $class = $this->appControllersNamespace . Strings::camelize($controller) . self::CONTROLLER_SUFFIX;
-        if (false === class_exists($class)) {
-//            throw new NotFoundException("Class {$class} is undefined");
-            die("Class {$class} is undefined");
-        }
+        $controller = Strings::camelize($controller);
 
-        $object = new $class();
-
-        if (!$object instanceof ControllerAbstract) {
-//            throw new NotFoundException("Object of {$class} has incorrect instance");
-            die("Object of {$class} has incorrect instance");
-        }
-
-        return $object;
+        return self::CONTROLLER_NAMESPACE . $controller . 'Controller';
     }
 
-    private function getActionMethod(ControllerAbstract $controller): string
+    private function prepareAction()
     {
         $action = $this->dispatcher->getActionPart();
-        $method = 'action' . Strings::camelize($action);
+        $action = Strings::camelize($action);
 
-        if (false === method_exists($controller, $method)) {
-            die("Action {$action} is undefined");
-        }
-
-        return $method;
+        return 'action' . $action;
     }
 
-    private function setAppControllersNamespace(): void
-    {
-        $appName = strtolower($this->dispatcher->getCurrentAppType());
-        $this->appControllersNamespace = "\\{$appName}\\controllers\\";
-    }
+
 }
