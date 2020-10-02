@@ -1,8 +1,10 @@
 <?php
 
 
-namespace components;
+namespace web\components;
 
+use components\App;
+use components\DispatcherAbstract;
 use helpers\Request;
 
 /**

@@ -54,8 +54,7 @@ class App
      */
     private function route(): void
     {
-        $dispatcher = $this->getAppType();
-        $dispatcher = $this->config->get($dispatcher);
+        $dispatcher = $this->config->get('dispatcher');
         if (!$dispatcher || !class_exists($dispatcher)) {
             throw new Exception("Dispatcher is invalid!");
         }
@@ -67,11 +66,4 @@ class App
 
         new Router($dispatcher);
     }
-
-    private function getAppType()
-    {
-        return php_sapi_name() !== 'cli' ? 'dispatcher' : 'cli_dispatcher';
-    }
-
-
 }

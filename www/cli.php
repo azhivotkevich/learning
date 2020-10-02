@@ -7,6 +7,6 @@ use components\Config;
 require_once __DIR__ . '/components/Autoloader.php';
 spl_autoload_register([new Autoloader(__DIR__), 'load']);
 
-$config = require_once __DIR__ . '/config/main.php';
+$config = require_once __DIR__ . '/config/web.php';
 
 App::init(Config::getInstance()->setConfig($config));
