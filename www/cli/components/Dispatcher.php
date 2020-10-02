@@ -1,9 +1,10 @@
 <?php
 
 
-namespace components;
+namespace cli\components;
 
-use helpers\Request;
+use components\App;
+use components\DispatcherAbstract;
 
 /**
  * Class Dispatcher
@@ -14,8 +15,8 @@ class Dispatcher extends DispatcherAbstract
     protected function setParts(): void
     {
         $defaultPart = (string)App::get()->config()->get('defaultPart');
-        $part = Request::clearUrl($_SERVER['REQUEST_URI']);
-        $part = array_filter(explode('/', $part));
+        $part = $_SERVER['argv'];
+        $part = array_filter(explode('::', $part[1]));
 
         $this->controllerPart = array_shift($part) ?: $defaultPart;
         $this->actionPart = array_shift($part) ?: $defaultPart;

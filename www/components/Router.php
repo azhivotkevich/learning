@@ -11,12 +11,12 @@ use helpers\Strings;
  */
 class Router
 {
-    private Dispatcher $dispatcher;
+    private DispatcherAbstract $dispatcher;
     private const CONTROLLER_NAMESPACE = '\\web\\controllers\\';
 
     public function __construct($dispatcher)
     {
-        $this->dispatcher = $dispatcher;
+        $this->dispatcher = $dispatcher instanceof DispatcherAbstract ? $dispatcher : null;
         $this->run();
     }
 
@@ -27,8 +27,12 @@ class Router
         if (!class_exists($class)) {
             throw new \Exception("Class {$class} can't be load");
         }
-        
+
         $class = new $class();
+
+        if (!$class instanceof ControllerAbstract) {
+            throw new \Exception("Class {$class} is invalid!");
+        }
 
         $method = $this->prepareAction();
 
