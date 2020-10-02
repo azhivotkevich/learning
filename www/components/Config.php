@@ -8,31 +8,11 @@ use helpers\Arrays;
 
 class Config
 {
-    private static ?Config $instance = null;
+    private ?array $config = [];
 
-    private function __construct()
+    public function __construct(array $config)
     {
-    }
-
-    private function __clone()
-    {
-    }
-
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    private array $config = [];
-
-    public function setConfig(array $config = []): self
-    {
-        $this->config = array_merge($this->config, $config);
-        return $this;
+        $this->config = $config;
     }
 
     public function get($key, $default = null)

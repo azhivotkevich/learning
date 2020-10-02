@@ -10,18 +10,17 @@ class App
     private static ?App $instance = null;
     private Config $config;
 
-    private function __construct(Config $config)
+    private function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config = new Config($config);
+
     }
 
-    public static function init(Config $config): App
+    public static function init(array $config): App
     {
-        if (null !== self::$instance) {
-            return self::$instance;
+        if (null === self::$instance) {
+            self::$instance = new self($config);
         }
-
-        self::$instance = new self($config);
         self::$instance->route();
         return self::$instance;
     }
@@ -54,11 +53,14 @@ class App
      */
     private function route(): void
     {
-        $dispatcher = $this->config->get('dispatcher');
-        if (!$dispatcher || !class_exists($dispatcher)) {
+        $dispatcherClass = $this->config->get('dispatcher');
+        if (!$dispatcherClass || !class_exists($dispatcherClass)) {
             throw new Exception("Dispatcher is invalid!");
         }
-        $dispatcher = new $dispatcher();
+
+
+        /** @var DispatcherAbstract $dispatcher */
+        $dispatcher= new $dispatcherClass();
 
         if (!$dispatcher instanceof DispatcherAbstract) {
             throw new Exception("Dispatcher instance is invalid!");
