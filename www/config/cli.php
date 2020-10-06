@@ -1,6 +1,6 @@
 <?php
 return [
-    'controllerNamespace' => '\\web\\controllers\\',
+    'controllerNamespace' => '\\cli\\controllers\\',
     'defaultPart'    => 'index',
     'dispatcher'     => \cli\components\Dispatcher::class
 ];

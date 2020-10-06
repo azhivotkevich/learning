@@ -12,11 +12,10 @@ use helpers\Strings;
 class Router
 {
     private DispatcherAbstract $dispatcher;
-    private const CONTROLLER_NAMESPACE = '\\web\\controllers\\';
 
-    public function __construct($dispatcher)
+    public function __construct(DispatcherAbstract $dispatcher)
     {
-        $this->dispatcher = $dispatcher instanceof DispatcherAbstract ? $dispatcher : null;
+        $this->dispatcher = $dispatcher;
         $this->run();
     }
 
@@ -52,7 +51,7 @@ class Router
         $controller = $this->dispatcher->getControllerPart();
         $controller = Strings::camelize($controller);
 
-        return self::CONTROLLER_NAMESPACE . $controller . 'Controller';
+        return App::get()->config()->get('controllerNamespace') . $controller . 'Controller';
     }
 
     private function prepareAction()
