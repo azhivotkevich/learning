@@ -3,4 +3,5 @@
 /config/*
 /data/*
 /logs/*
+/vendor
 .DS_Store

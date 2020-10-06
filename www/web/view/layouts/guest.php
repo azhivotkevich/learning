@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="/web/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/web/public/css/guest.css">
 </head>
 <body>
 <?= $content ?>

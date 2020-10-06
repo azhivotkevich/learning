@@ -16,4 +16,9 @@ class Request
 
         return $url;
     }
+
+    public static function isPost(): bool
+    {
+        return strtoupper($_SERVER['REQUEST_METHOD']) === 'POST';
+    }
 }

@@ -48,7 +48,6 @@ class Template
     private function prepareTemplate(string $template)
     {
         $file = $this->dir . '/' . $template . '.php';
-
         if (!file_exists($file)) {
             throw new \Exception("View {$template} doesn't exist");
         }
@@ -58,7 +57,7 @@ class Template
 
     public function setLayout(string $layout): self
     {
-        $this->layout = $layout;
+        $this->layout = "layouts/{$layout}";
         return $this;
     }
 }

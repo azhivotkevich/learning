@@ -4,6 +4,7 @@
 namespace components;
 
 use Exception;
+use PDO;
 
 class App
 {
@@ -13,7 +14,6 @@ class App
     private function __construct(array $config)
     {
         $this->config = new Config($config);
-
     }
 
     public static function init(array $config): App
@@ -60,12 +60,22 @@ class App
 
 
         /** @var DispatcherAbstract $dispatcher */
-        $dispatcher= new $dispatcherClass();
+        $dispatcher = new $dispatcherClass();
 
         if (!$dispatcher instanceof DispatcherAbstract) {
             throw new Exception("Dispatcher instance is invalid!");
         }
 
         new Router($dispatcher);
+    }
+
+    private ?DBConnection $db = null;
+
+    public function dbConnection(): PDO
+    {
+        if (null === $this->db) {
+            $this->db = new DBConnection();
+        }
+        return $this->db->getConnection();
     }
 }
