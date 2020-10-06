@@ -22,23 +22,27 @@ class Router
 
     private function run()
     {
-        $class = $this->prepareController();
+        $className = $this->prepareController();
 
-        if (!class_exists($class)) {
-            throw new \Exception("Class {$class} can't be load");
+        if (!class_exists($className)) {
+            throw new \Exception("Class {$className} can't be load");
         }
 
-        $class = new $class();
+        $class = new $className();
 
         if (!$class instanceof ControllerAbstract) {
-            throw new \Exception("Class {$class} is invalid!");
+            throw new \Exception("Class {$className} is invalid!");
         }
+
+        $class->setControllerPath($this->dispatcher->getControllerPart());
 
         $method = $this->prepareAction();
 
         if (!method_exists($class, $method)) {
             throw new \Exception("Method {$method} doesn't exist");
         }
+
+        $class->setActionPath($this->dispatcher->getActionPart());
 
         return $class->{$method}();
     }

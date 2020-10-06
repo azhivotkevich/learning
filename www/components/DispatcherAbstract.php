@@ -5,7 +5,7 @@ namespace components;
 
 use helpers\Request;
 
-class DispatcherAbstract
+abstract class DispatcherAbstract
 {
     protected string $controllerPart = '';
     protected string $actionPart = '';
