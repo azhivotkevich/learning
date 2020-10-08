@@ -4,8 +4,8 @@
 namespace models;
 
 
-use components\ModelAbstract;
-use PDO;
+use cli\helpers\Colors;
+use components\ModelAbstract, PDO;
 
 class Migrations extends ModelAbstract
 {
@@ -22,7 +22,7 @@ class Migrations extends ModelAbstract
             throw new \Exception("Can't create `migrate` table");
         }
 
-        echo sprintf("Table `migrate` was successfully created!%s", PHP_EOL);
+        Colors::print("Table `migrate` was successfully created! \r\n", 'green', '42');
     }
 
     public function verifyTable(): void

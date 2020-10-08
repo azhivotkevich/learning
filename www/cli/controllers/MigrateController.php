@@ -4,11 +4,7 @@
 namespace cli\controllers;
 
 
-use components\App;
-use components\ControllerAbstract;
-use Exception;
-use helpers\Dir;
-use models\Migrations;
+use cli\helpers\Colors, components\App, components\ControllerAbstract, Exception, helpers\Dir, models\Migrations;
 
 class MigrateController extends ControllerAbstract
 {
@@ -23,19 +19,16 @@ class MigrateController extends ControllerAbstract
 
     public function actionUp()
     {
-        if (empty($this->dir)) {
-            throw new Exception("There is no file to execute on {$this->dir}");
-        }
+        if (empty($this->dir)) throw new Exception("There is no file to execute on {$this->dir}");
+
         if (!empty($this->prepareFiles())) {
             foreach ($this->prepareFiles() as $file => $path) {
                 if ($this->model->execute(file_get_contents($path))) {
                     $this->model->setExecuted($file);
-                    echo sprintf("%s executed \r\n", $file);
+                    Colors::print("{$file} executed \r\n", 'yellow');
                 }
             }
-        } else {
-            echo "Everything is up to date! \r\n";
-        }
+        } else Colors::print("Everything is up to date! \r\n", 'light_purple');
 
     }
 
