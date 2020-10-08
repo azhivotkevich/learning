@@ -6,6 +6,7 @@ namespace cli\controllers;
 
 use components\App;
 use components\ControllerAbstract;
+use Exception;
 use helpers\Dir;
 use models\Migrations;
 
@@ -23,7 +24,7 @@ class MigrateController extends ControllerAbstract
     public function actionUp()
     {
         if (empty($this->dir)) {
-            throw new \Exception("There is no file to execute on {$this->dir}");
+            throw new Exception("There is no file to execute on {$this->dir}");
         }
         if (!empty($this->prepareFiles())) {
             foreach ($this->prepareFiles() as $file => $path) {
@@ -41,7 +42,7 @@ class MigrateController extends ControllerAbstract
     private function setDir($dir): void
     {
         if (!file_exists($dir)) {
-            throw new \Exception("There is no dir: {$dir}; on this server! Check your config.");
+            throw new Exception("There is no dir: {$dir}; on this server! Check your config.");
         }
 
         $this->dir = $dir;
