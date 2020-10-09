@@ -5,65 +5,60 @@ namespace models;
 
 
 use cli\helpers\Colors;
+use components\App;
 use components\ModelAbstract, PDO;
+use helpers\Dir;
 
 class Migrations extends ModelAbstract
 {
-
-    private function createTable(): void
+    public function createMigrationsTable(): void
     {
-        $sth = $this->db()->prepare(/** @lang MySQL */ '
+        $result = $this->db()->exec(/** @lang MySQL */ '
                     CREATE TABLE IF NOT EXISTS `migrate` (
                     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT primary key,
                     `file` varchar(255) NOT NULL,
-                    `date` date NOT NULL)');
+                    `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP)');
 
-        if (!$sth->execute()) {
-            throw new \Exception("Can't create `migrate` table");
+        if ($result === false) {
+            throw new \Exception("Can't create migrate table! \r\n");
         }
 
-        Colors::print("Table `migrate` was successfully created! \r\n", 'green', '42');
+        Colors::print("Migrations are ready \r\n", 'green');
     }
 
-    public function verifyTable(): void
+    public function getNewMigrations()
     {
-        $sth = $this->db()->prepare(/** @lang MySQL */ 'SELECT 1 FROM `migrate`');
-        if (!$sth->execute()) {
-            $this->createTable();
-        }
+        $allMigrations = $this->getAllMigrations();
+        $executedMigrations = $this->getExecutedMigrations();
+
+        return array_diff($allMigrations, $executedMigrations);
     }
 
-    public function getExecutedFiles(array $fileNames): array
+    private function getAllMigrations(): array
     {
-        $placeholders = substr(str_repeat('?,', count($fileNames)), 0, -1);
-        $sql = /** @lang MySQL */
-            "SELECT `file` FROM `migrate` WHERE `file` IN ({$placeholders})";
+        return Dir::scan(App::get()->config()->get('migrationsDir'));
+    }
+
+    private function getExecutedMigrations()
+    {
+        $sql = "SELECT `file` FROM `migrate`";
         $sth = $this->db()->prepare($sql);
-        $sth->execute($fileNames);
-
-        $fileNames = [];
-        if ($sth->rowCount() > 0) {
-            foreach ($sth->fetchAll(PDO::FETCH_ASSOC) as $names) {
-                $fileNames[] = $names['file'];
-            }
-        }
-        return $fileNames;
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function execute(string $sth): bool
+    public function executeMigration($file)
     {
-        $sth = $this->db()->prepare($sth);
-        if (!$sth->execute()) {
-            return false;
-        }
-        return true;
+        $file = App::get()->config()->get('migrationsDir') . $file;
+        $sql = file_get_contents($file);
+
+        return false !== $this->db()->exec($sql);
     }
 
-    public function setExecuted(string $file): void
+    public function saveMigrationStatus($file): void
     {
-        $sql = /** @lang MySQL */
-            "INSERT INTO `migrate` (`file`, `date`) VALUES (:file,:date)";
+        $sql = "INSERT INTO `migrate` (`file`) VALUES (:file)";
         $sth = $this->db()->prepare($sql);
-        $sth->execute(['file' => $file, 'date' => date('Y-m-d')]);
+        $sth->execute([':file' => $file]);
     }
 }

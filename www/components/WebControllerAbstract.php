@@ -15,8 +15,8 @@ abstract class WebControllerAbstract extends ControllerAbstract
         $this->template = new Template();
     }
 
-    protected function render()
+    protected function render(array $variables = [])
     {
-        return $this->template->render("{$this->getControllerPath()}/{$this->getActionPath()}");
+        return $this->template->render("{$this->getControllerPath()}/{$this->getActionPath()}", $variables);
     }
 }

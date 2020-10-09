@@ -34,8 +34,10 @@ class Template
         $this->dir = $dir;
     }
 
-    public function render($view)
+    public function render($view, array $variables = [])
     {
+        extract($variables);
+        
         ob_start();
         require $this->prepareTemplate($view);
         $content = ob_get_clean();

@@ -28,8 +28,8 @@ class GuestController extends WebControllerAbstract
         if (Request::isPost()) {
             $userModel = new User();
             $userModel->createUser($_POST['username'], $_POST['password']);
-            header('Location: /guest');
-            exit;
+            /*header('Location: /guest');
+            exit;*/
         }
         echo $this->render();
     }
