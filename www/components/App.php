@@ -10,6 +10,7 @@ class App
 {
     private static ?App $instance = null;
     private Config $config;
+    private ?Session $session = null;
 
     private function __construct(array $config)
     {
@@ -77,5 +78,13 @@ class App
             $this->db = new DBConnection();
         }
         return $this->db->getConnection();
+    }
+
+    public function session(): Session
+    {
+        if (null === $this->session) {
+            $this->session = new Session();
+        }
+        return $this->session;
     }
 }

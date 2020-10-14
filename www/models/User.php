@@ -11,10 +11,6 @@ class User extends ModelAbstract
 {
     public function createUser($user, $password)
     {
-        if (!$this->checkUserName($user)) {
-            echo "User name {$user} already exist."; exit();
-        }
-
         $password = password_hash($password, PASSWORD_BCRYPT);
         $sql = /** @lang MySQL */
             "INSERT INTO `users` (`name`, `password`) VALUES (:user, :password);";
@@ -24,14 +20,5 @@ class User extends ModelAbstract
             'password' => $password
         ];
         $sth->execute($data);
-    }
-
-    private function checkUserName($login)
-    {
-        $sql = /** @lang MySQL */
-            "SELECT `name` FROM `users` WHERE `name` = ?;";
-        $sth = $this->db()->prepare($sql);
-        $sth->execute([$login]);
-        return empty($sth->fetchAll(PDO::FETCH_ASSOC));
     }
 }

@@ -52,7 +52,13 @@ class Migrations extends ModelAbstract
         $file = App::get()->config()->get('migrationsDir') . $file;
         $sql = file_get_contents($file);
 
-        return false !== $this->db()->exec($sql);
+        $result = false !== $this->db()->exec($sql);
+
+        if (!$result) {
+            Colors::print("{$this->db()->errorInfo()[2]} \r\n", 'red');
+        }
+
+        return $result;
     }
 
     public function saveMigrationStatus($file): void
