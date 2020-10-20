@@ -3,6 +3,7 @@
 
 namespace components;
 
+use components\builder\Select;
 use Exception;
 use PDO;
 
@@ -23,6 +24,9 @@ class App
             self::$instance = new self($config);
         }
         self::$instance->route();
+        var_dump((new Select('users'))->rows('name')
+            ->where('id','=', '1')
+            ->execute());
         return self::$instance;
     }
 
