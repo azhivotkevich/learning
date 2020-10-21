@@ -40,6 +40,7 @@ class Select extends AbstractBuilder
         $sth = $this->db->prepare($sql);
         $sth->execute($this->params);
         return $sth->fetchAll($fetchMode);
+
     }
 
 
