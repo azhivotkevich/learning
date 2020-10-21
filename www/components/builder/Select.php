@@ -9,43 +9,32 @@ use PDO;
 
 class Select extends AbstractBuilder
 {
-    private ?string $rows = null;
-    private ?array $conditions = [];
-    private ?array $params = [];
+    private string $rows = '*';
+    private array $params = [];
 
-    public function __construct(string $from)
-    {
-        parent::__construct($from);
-        $this->setRows();
-    }
-
-    public function where(string $row, string $condition, string $value, string $sqlCondition = null): Select
+    public function where(string $row, string $condition, string $value, string $sqlCondition = ''): Select
     {
         $row = Strings::removeSpecialChars($row);
 
-        $placeholder = array_key_exists(":{$row}", $this->params) ? $placeholder = uniqid() . '_' . $row : $row;
-
-        if (null !== $sqlCondition) {
-            $sqlCondition = Strings::removeSpecialChars($sqlCondition);
-            $condition = ["{$sqlCondition} `{$row}` {$condition} :{$placeholder}"];
+        if (array_key_exists(":{$row}", $this->params)) {
+            $placeholder = count($this->params) . '_' . $row;
         } else {
-            $condition = ["`{$row}` {$condition} :{$placeholder}"];
+            $placeholder = $row;
         }
 
+        $sqlCondition = Strings::removeSpecialChars($sqlCondition);
+        $this->where[] = "{$sqlCondition} `{$row}` {$condition} :{$placeholder}";
 
-        $this->conditions = array_merge($this->conditions, $condition);
-        $this->params = array_merge($this->params, [":{$placeholder}" => $value]);
-
-        $this->where = implode(' ', $this->conditions);
-
+        $this->params[":{$placeholder}"] = $value;
         return $this;
     }
 
     public function execute(string $fetchMode = PDO::FETCH_COLUMN)
     {
         $sql = "SELECT {$this->rows} FROM {$this->from}";
-        if (isset($this->where)) {
-            $sql .= " WHERE {$this->where}";
+        if ($this->where) {
+            $conditions = implode(' ', $this->where);
+            $sql .= " WHERE {$conditions}";
         }
 
         $sth = $this->db->prepare($sql);
@@ -54,32 +43,17 @@ class Select extends AbstractBuilder
     }
 
 
-    public function rows(string $rows = ''): Select
+    public function rows(array $rows): Select
     {
-        $rows = array_filter(explode(',', $rows));
-        $string = '';
-        if (!empty($rows)) {
-            if (count($rows) > 1) {
-                foreach ($rows as $row) {
-                    $rowName = Strings::removeSpecialChars($row);
-                    $string .= "`{$rowName}`,";
-                }
-                $string = substr($string, 0, -1);
-            } else {
-                $string = array_shift($rows);
-                $string = "`{$string}`";
-            }
-            $this->rows = $string;
+        $rows = array_filter($rows);
+
+        if (empty($rows)) {
+            return $this;
         }
 
-        return $this;
-    }
+        $rows = array_map([Strings::class, 'removeSpecialChars'], $rows);
+        $this->rows = implode(',', $rows);
 
-    private function setRows()
-    {
-        if (null === $this->rows) {
-            $this->rows = '*';
-        }
         return $this;
     }
 }

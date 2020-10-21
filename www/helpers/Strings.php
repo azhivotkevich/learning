@@ -27,7 +27,7 @@ class Strings
 
     public static function removeSpecialChars(string $string): string
     {
-        $string = trim($string, " \t\n\r\0\x0B/");
+        $string = trim($string, " \t\n\r\0\x0B");
         return preg_replace(/** @lang text */ '/[^a-zA-Z0-9_ -]/s', '', $string);
     }
 }

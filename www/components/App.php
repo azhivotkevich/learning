@@ -24,9 +24,11 @@ class App
             self::$instance = new self($config);
         }
         self::$instance->route();
-        var_dump((new Select('users'))->rows('name')
-            ->where('id','=', '1')
+        var_dump((new Select('users'))
+            ->rows(['name'])
+            ->where('name','LIKE', '%admin%')
             ->execute());
+
         return self::$instance;
     }
 

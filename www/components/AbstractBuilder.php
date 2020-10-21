@@ -9,9 +9,9 @@ abstract class AbstractBuilder
 {
     protected PDO $db;
     protected ?string $from = null;
-    protected string $where;
+    protected array $where;
 
-    protected function __construct(string $from)
+    public function __construct(string $from)
     {
         $this->setTable($from);
         $this->db = App::get()->dbConnection();
@@ -20,7 +20,7 @@ abstract class AbstractBuilder
     final private function setTable(string $from): self
     {
         if (null === $this->from) {
-            $from = trim($from, " \t\n\r\0\x0B/");
+            $from = trim($from);
             $this->from = "`{$from}`";
         }
         return $this;

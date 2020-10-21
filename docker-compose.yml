@@ -1,58 +1,31 @@
-version: "3"
-
+version: '3'
 services:
-  webserver:
-    build: 
-      context: ./bin/php74
-    container_name: 'lamp-php74'
-    restart: 'always'
-    ports:
-      - "80:80"
-      - "443:443"
-    links:
+  app:
+    build: ./docker/php
+    container_name: skillup_app
+    volumes:
+      - ./www:/var/www
+    depends_on:
       - database
-    volumes:
-      - ./www:/var/www/html
-      - ./config/php/php.ini:/usr/local/etc/php/php.ini
-      - ./config/vhosts:/etc/apache2/sites-enabled
-      - ./logs/apache2:/var/log/apache2
-    environment:
-      PMA_PORT: 8080
-  database:
-    build:
-      context: "./bin/mysql"
-    container_name: 'lamp-database'
-    restart: 'always'
+  nginx:
+    image: nginx:1.17
+    container_name: skillup_nginx
     ports:
-      - "127.0.0.1:3306:3306"
+      - 8011:80
     volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./logs/mysql:/var/log/mysql
+      - ./www:/var/www
+      - ./docker/nginx/skillup.local.conf:/etc/nginx/conf.d/skillup.local.conf
+    depends_on:
+      - app
+  database:
+    image: mysql
+    ports:
+      - 3306:3306
+    container_name: mysql-mainacad
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: tiger
       MYSQL_DATABASE: docker
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: 'lamp-phpmyadmin'
-    links:
-      - database
-    environment:
-      PMA_HOST: database
-      PMA_PORT: 3306
-      PMA_USER: docker
-      PMA_PASSWORD: docker
-      MYSQL_ROOT_PASSWORD: tiger
-      MYSQL_USER: docker
-      MYSQL_PASSWORD: docker
-    ports:
-      - '8080:80'
-    volumes:
-      - /sessions
-      - ./config/php/php.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
-  redis:
-    container_name: 'lamp-redis'
-    image: redis:latest
-    ports:
-      - "127.0.0.1:6379:6379"
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
