@@ -7,6 +7,13 @@ services:
       - ./www:/var/www
     depends_on:
       - database
+  app2:
+    build: ./docker/php
+    container_name: skillup_app
+    volumes:
+      - ./www:/var/www
+    depends_on:
+      - database
   nginx:
     image: nginx:1.17
     container_name: skillup_nginx

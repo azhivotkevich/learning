@@ -28,4 +28,14 @@ class Session
         }
         return $flash;
     }
+
+    public function set(string $key, $value)
+    {
+        $_SESSION['static'][$key] = $value;
+    }
+
+    public function get(string $key)
+    {
+        return Arrays::getValue($key, $_SESSION['static'] ?? []);
+    }
 }

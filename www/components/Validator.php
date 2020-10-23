@@ -9,7 +9,7 @@ use components\validators\ValidatorAbstract;
 class Validator
 {
 
-    public function validate($data, array $rules)
+    public function setup(array $data, array $rules)
     {
         $result = new ValidationResult();
 

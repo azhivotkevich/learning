@@ -20,12 +20,17 @@ use components\ValidationResult;
            value="<?= $result ? $result->getValue('username') : '' ?>">
     <?php if ($result): ?>
         <?php foreach ($result->getErrors('username') as $error):?>
-            <span><?=$error?></span>
+            <span class="text-danger"><?=$error?></span>
         <?endforeach;?>
     <?php endif;?>
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" class="form-control" placeholder="Password" required="" name="password"
            autocomplete="off">
+    <?php if ($result): ?>
+        <?php foreach ($result->getErrors('password') as $error):?>
+            <span class="text-danger"><?=$error?></span>
+        <?endforeach;?>
+    <?php endif;?>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     <p class="mt-5 mb-3 text-muted">© 2017-<?= date('Y') ?></p>
 </form>

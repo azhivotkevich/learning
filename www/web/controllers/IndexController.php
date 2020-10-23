@@ -4,9 +4,9 @@
 namespace web\controllers;
 
 
-use components\WebControllerAbstract;
+use components\SecuredWebController;
 
-class IndexController extends WebControllerAbstract
+class IndexController extends SecuredWebController
 {
     public function actionIndex()
     {

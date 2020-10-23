@@ -24,10 +24,10 @@ class App
             self::$instance = new self($config);
         }
         self::$instance->route();
-        var_dump((new Select('users'))
+        /*var_dump((new Select('users'))
             ->rows(['name'])
             ->where('name','LIKE', '%admin%')
-            ->execute());
+            ->execute());*/
 
         return self::$instance;
     }
