@@ -9,11 +9,10 @@ use components\Validator;
 use components\validators\StringValidator;
 use components\validators\PasswordValidator;
 use components\validators\UniqueValidator;
-use components\WebControllerAbstract;
 use helpers\Request;
 use models\User;
 
-class GuestController extends WebControllerAbstract
+class GuestController extends \web\components\GuestController
 {
     public function __construct()
     {
@@ -37,13 +36,13 @@ class GuestController extends WebControllerAbstract
                 App::get()->session()->set('user', $user);
                 header('Location: /index');
             } else {
-                App::get()->session()->setFlash('login', $result);
+                App::get()->session()->setFlash('auth', $result);
                 header('Location: /guest/index');
             }
             exit;
         }
 
-        echo $this->render();
+        echo $this->render(['result' => App::get()->session()->getFlash('auth')]);
         App::get()->dbConnection();
     }
 

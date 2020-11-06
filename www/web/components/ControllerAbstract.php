@@ -1,12 +1,11 @@
 <?php
 
 
-namespace components;
+namespace web\components;
 
+use components\ControllerAbstract as BaseController;
 
-use web\components\Template;
-
-abstract class WebControllerAbstract extends ControllerAbstract
+abstract class ControllerAbstract extends BaseController
 {
     protected Template $template;
 

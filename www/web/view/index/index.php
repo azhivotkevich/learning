@@ -3,6 +3,3 @@
         indexAction
     </div>
 </div>
-
-<?php
-var_dump(\components\App::get()->session()->get('user'));

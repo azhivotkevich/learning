@@ -5,10 +5,19 @@ namespace components;
 
 use PDO;
 
-abstract class AbstractBuilder
+class Builder
 {
     protected PDO $db;
-    protected ?string $from = null;
+
+    public static function select(array $rows = [])
+    {
+        return new \components\builder\Select($rows);
+    }
+
+
+
+
+    /*protected ?string $from = null;
     protected array $where;
 
     public function __construct(string $from)
@@ -24,5 +33,5 @@ abstract class AbstractBuilder
             $this->from = "`{$from}`";
         }
         return $this;
-    }
+    }*/
 }

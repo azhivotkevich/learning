@@ -5,11 +5,14 @@ namespace web\components;
 
 
 use components\App;
+use helpers\Arrays;
 
 class Template
 {
     private string $dir;
     private string $layout;
+    private array $variables = [];
+    private string $content = '';
 
     public function __construct(?string $dir = null)
     {
@@ -36,15 +39,20 @@ class Template
 
     public function render($view, array $variables = [])
     {
-        extract($variables);
-        
+        $this->variables = $variables;
+
         ob_start();
         require $this->prepareTemplate($view);
-        $content = ob_get_clean();
+        $this->content = ob_get_clean();
 
         ob_start();
         require $this->prepareTemplate($this->layout);
         return ob_get_clean();
+    }
+
+    public function __get(string $key)
+    {
+        return Arrays::getValue($key, $this->variables);
     }
 
     private function prepareTemplate(string $template)
@@ -61,5 +69,13 @@ class Template
     {
         $this->layout = "layouts/{$layout}";
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
     }
 }

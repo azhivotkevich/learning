@@ -9,7 +9,6 @@ use components\App;
 class PasswordValidator extends ValidatorAbstract
 {
     private string $hash;
-    private string $password;
 
     public function __construct(string $hash, string $error)
     {

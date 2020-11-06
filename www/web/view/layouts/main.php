@@ -8,8 +8,11 @@
     <title>Document</title>
     <link rel="stylesheet" href="/web/public/css/bootstrap.min.css">
 </head>
-<body>
-<?= $content ?>
+<body class="pt-5">
+<main role="main" class="inner cover">
+    <?= $this->getContent(); ?>
+</main>
+
 </body>
 <script src="//code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="/web/public/js/bootstrap.bundle.min.js"></script>

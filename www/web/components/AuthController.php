@@ -1,10 +1,11 @@
 <?php
 
 
-namespace components;
+namespace web\components;
 
+use components\App;
 
-abstract class SecuredWebController extends WebControllerAbstract
+abstract class AuthController extends ControllerAbstract
 {
     public function __construct()
     {

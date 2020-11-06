@@ -3,10 +3,9 @@
 
 namespace web\controllers;
 
+use web\components\AuthController;
 
-use components\SecuredWebController;
-
-class IndexController extends SecuredWebController
+class IndexController extends AuthController
 {
     public function actionIndex()
     {
