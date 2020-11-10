@@ -23,8 +23,8 @@ use components\ValidationResult;
     <input type="password" id="password" class="form-control" placeholder="Password" required="" name="password"
            autocomplete="off">
 
-    <?php if ($result): ?>
-        <?php foreach ($result->getErrors('password') as $error):?>
+    <?php if ($this->result): ?>
+        <?php foreach ($this->result->getErrors('password') as $error):?>
             <span class="text-danger"><?=$error?></span>
         <?endforeach;?>
     <?php endif;?>

@@ -17,17 +17,17 @@ use components\ValidationResult;
            autofocus=""
            name="username"
            autocomplete="off"
-           value="<?= $result ? $result->getValue('username') : '' ?>">
-    <?php if ($result): ?>
-        <?php foreach ($result->getErrors('username') as $error):?>
+           value="<?= $this->result ? $result->getValue('username') : '' ?>">
+    <?php if ($this->result): ?>
+        <?php foreach ($this->result->getErrors('username') as $error):?>
             <span class="text-danger"><?=$error?></span>
         <?endforeach;?>
     <?php endif;?>
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" class="form-control" placeholder="Password" required="" name="password"
            autocomplete="off">
-    <?php if ($result): ?>
-        <?php foreach ($result->getErrors('password') as $error):?>
+    <?php if ($this->result): ?>
+        <?php foreach ($this->result->getErrors('password') as $error):?>
             <span class="text-danger"><?=$error?></span>
         <?endforeach;?>
     <?php endif;?>

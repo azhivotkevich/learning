@@ -3,6 +3,10 @@
 
 namespace components;
 
+use components\builder\Delete;
+use components\builder\Select;
+use components\builder\Insert;
+use components\builder\Update;
 use PDO;
 
 class Builder
@@ -11,7 +15,22 @@ class Builder
 
     public static function select(array $rows = [])
     {
-        return new \components\builder\Select($rows);
+        return new Select($rows);
+    }
+
+    public static function insert(array $rows)
+    {
+        return new Insert($rows);
+    }
+
+    public static function update(string $table)
+    {
+        return new Update($table);
+    }
+
+    public static function delete()
+    {
+        return new Delete();
     }
 
 

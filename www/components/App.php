@@ -24,11 +24,6 @@ class App
             self::$instance = new self($config);
         }
         self::$instance->route();
-        Builder::select()->from('users')->where(
-            [
-                ['id','=','1']
-            ]
-        )->all();
 
         return self::$instance;
     }

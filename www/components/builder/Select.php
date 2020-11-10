@@ -47,9 +47,8 @@ class Select
 
     private function execute()
     {
-        $db = App::get()->dbConnection();
         $sql = "SELECT {$this->rows} FROM {$this->table} WHERE {$this->where->getSql()}";
-        $sth = $db->prepare($sql);
+        $sth = App::get()->dbConnection()->prepare($sql);
         $sth->execute($this->where->getBinds());
 
         return $sth;
