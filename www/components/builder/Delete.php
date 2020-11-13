@@ -14,8 +14,7 @@ class Delete
 
     public function from(string $table)
     {
-        $table = trim($table);
-        $this->table = "`{$table}`";
+        $this->table = trim($table);
         return $this;
     }
 

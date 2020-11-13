@@ -34,8 +34,7 @@ class Select
 
     public function from(string $table)
     {
-        $table = trim($table);
-        $this->table = "`{$table}`";
+        $this->table = trim($table);
         return $this;
     }
 
@@ -54,17 +53,20 @@ class Select
         return $sth;
     }
 
-    public function all()
+    public function all(): array
     {
-        var_dump($this->execute()->fetchAll(PDO::FETCH_ASSOC));
+        return $this->execute()->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function one()
+    public function one(): array
     {
-        var_dump($this->execute()->fetch(PDO::FETCH_ASSOC));
+        return $this->execute()->fetch(PDO::FETCH_ASSOC);
     }
 
-
+    public function column(): array
+    {
+        return $this->execute()->fetchAll(PDO::FETCH_COLUMN);
+    }
 
 
     /*private string $rows = '*';

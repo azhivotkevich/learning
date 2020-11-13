@@ -34,7 +34,7 @@ class Where
      */
     public function getSql(): string
     {
-        return $this->sql;
+        return $this->sql ?: '1=1';
     }
 
     private function build(array $conditions, string $glue): void
